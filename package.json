@@ -1,0 +1,27 @@
+{
+  "name": "quick-auth-utils",
+  "version": "1.0.1",
+  "keywords": [
+    "authentication"
+  ],
+  "description": "Quick tools to add some authentication to your applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "rtorr <rtorruellas@gmail.com> (http://rtorr.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "amp-extend": "^1.0.1",
+    "randomstring": "^1.0.3",
+    "validator": "^3.33.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:rtorr/quick-auth-utils.git"
+  },
+  "author": "rtorr <rtorruellas@gmail.com> (http://rtorr.com/)",
+}
