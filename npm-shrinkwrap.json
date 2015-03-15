@@ -1,0 +1,28 @@
+{
+  "name": "quick-auth-utils",
+  "version": "2.0.2",
+  "dependencies": {
+    "amp-extend": {
+      "version": "1.0.1",
+      "from": "amp-extend@*",
+      "resolved": "https://registry.npmjs.org/amp-extend/-/amp-extend-1.0.1.tgz",
+      "dependencies": {
+        "amp-is-object": {
+          "version": "1.0.1",
+          "from": "amp-is-object@>=1.0.0 <2.0.0",
+          "resolved": "https://registry.npmjs.org/amp-is-object/-/amp-is-object-1.0.1.tgz"
+        }
+      }
+    },
+    "randomstring": {
+      "version": "1.0.3",
+      "from": "randomstring@*",
+      "resolved": "https://registry.npmjs.org/randomstring/-/randomstring-1.0.3.tgz"
+    },
+    "validator": {
+      "version": "3.33.0",
+      "from": "validator@*",
+      "resolved": "https://registry.npmjs.org/validator/-/validator-3.33.0.tgz"
+    }
+  }
+}
