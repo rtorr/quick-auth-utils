@@ -1,16 +1,20 @@
 'use strict';
 
 var assert = require('assert');
-
+var extend = require('amp-extend');
 var quickAuthUtils = require('./../index');
-
 var testValue = 'test|cd4b0dcbe0f4538b979fb73664f51abe';
 
 describe('quick-auth-utils', function(){
 
   describe('extend', function(){
     it('should set new values on the quick auth object', function(){
-      quickAuthUtils.extend({SECRET: 'test'});
+      quickAuthUtils.extend({
+        SECRET: 'test',
+        ITERATIONS: 4096,
+        KEY_LENGTH: 20,
+        DIGEST: 'sha256'
+      });
       assert.equal('test', quickAuthUtils.SECRET);
     });
   });
@@ -81,34 +85,59 @@ describe('quick-auth-utils', function(){
   });
 
   describe('makePasswordHash', function(){
-    it('creat new user password + salt hash', function(){
-      assert.equal(quickAuthUtils.makePasswordHash('username', 'password', 'salt'), '1606af4a1514e15097ecc3a82653f1f4ce8ec79be5291d0df792187273e408c2|salt');
-      assert.notEqual(quickAuthUtils.makePasswordHash('username', 'password'), '1606af4a1514e15097ecc3a82653f1f4ce8ec79be5291d0df792187273e408c2|salt',
-      'should always have a random salt');
+    var compare = '0476f46a480d2b8ce263f1968654a141f80e0bc4|salt';
+    it('create new user password + salt hash', function(done){
+      var options = {
+        key: 'username',
+        password: 'password',
+        salt: 'salt'
+      };
+      quickAuthUtils.makePasswordHash(options, function(passwordHash){
+        assert.equal(passwordHash, compare);
+        done();
+      });
+    });
+    it('we should give each user their own salt', function(done){
+      var options = {
+        key: 'username',
+        password: 'password'
+      };
+      quickAuthUtils.makePasswordHash(options, function(passwordHash){
+        assert.notEqual(passwordHash, compare);
+        done();
+      });
     });
   });
 
   describe('create user flow', function(){
-    it('create a new user', function(){
+    it('create a new user', function(done){
       var email = 'john@google.com';
       var password = 'secrets123456';
 
       if (quickAuthUtils.validEmail(email) && quickAuthUtils.validPassword(password)){
         //Salt is random each time, so good luck guessint the value :)
-        assert.equal(quickAuthUtils.makePasswordHash(email, password).length, 70);
+        quickAuthUtils.makePasswordHash({key: email, password: password}, function(passwordHash){
+          assert.equal(passwordHash.length, 46);
+          done();
+        });
       }
 
     });
   });
 
   describe('check authentication', function(){
-    it('create a new user and authenticate', function(){
-      var email = 'john@google.com';
-      var password = 'secrets123456';
-      var userPasswordHash = quickAuthUtils.makePasswordHash(email, password);
-      var salt = userPasswordHash.split('|')[1];
-      var h = quickAuthUtils.makePasswordHash(email, password, salt);
-      assert.equal(userPasswordHash, h);
+    it('create a new user and authenticate', function(done){
+      var options = {
+        key: 'username',
+        password: 'password'
+      };
+      var userPasswordHash = quickAuthUtils.makePasswordHash(options, function(passwordHash){
+        var salt = {salt: passwordHash.split('|')[1]};
+        var h = quickAuthUtils.makePasswordHash(extend(options, salt), function(pwdHash){
+          assert.equal(passwordHash, pwdHash);
+          done();
+        });
+      });
     });
   });
 

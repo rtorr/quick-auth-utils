@@ -27,12 +27,14 @@ var authUtils = {
   makeSalt: function(){
     return randomstring.generate(5);
   },
-  makePasswordHash: function(username, password, salt){
-    if (!salt){
-      salt = this.makeSalt();
-    }
-    var h = cry.createHash('sha256').update(username + password + salt).digest('hex');
-    return h+'|'+salt;
+  makePasswordHash: function(options, cb){
+    var salt = options.salt || this.makeSalt();
+    var h = cry.pbkdf2(options.key + options.password, salt, this.ITERATIONS, this.KEY_LENGTH, this.DIGEST, function(err, key){
+      if (err){
+        throw new Error(err);
+      }
+      cb(key.toString('hex') + '|' + salt);
+    });
   }
 };
 
