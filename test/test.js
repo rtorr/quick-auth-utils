@@ -88,7 +88,7 @@ describe('quick-auth-utils', function(){
     });
   });
 
-  describe('creat user flow', function(){
+  describe('create user flow', function(){
     it('create a new user', function(){
       var email = 'john@google.com';
       var password = 'secrets123456';
@@ -100,5 +100,17 @@ describe('quick-auth-utils', function(){
 
     });
   });
+
+  describe('check authentication', function(){
+    it('create a new user and authenticate', function(){
+      var email = 'john@google.com';
+      var password = 'secrets123456';
+      var userPasswordHash = quickAuthUtils.makePasswordHash(email, password);
+      var salt = userPasswordHash.split('|')[1];
+      var h = quickAuthUtils.makePasswordHash(email, password, salt);
+      assert.equal(userPasswordHash, h);
+    });
+  });
+
 
 });
