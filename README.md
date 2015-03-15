@@ -19,6 +19,16 @@ and comparing those values later on for authentication.
 ```
 var quickAuthUtils = require('quick-auth-utils');
 
+quickAuthUtils.extend({
+  SECRET: 'test',
+  ITERATIONS: 4096,
+  KEY_LENGTH: 20,
+  DIGEST: 'sha256',
+  someValidator: function(stuff){
+    return stuff === 0;
+  }
+});
+
 var createUser = function(email, password, next){
   if (quickAuthUtils.validEmail(email) && quickAuthUtils.validPassword(password)){
 
